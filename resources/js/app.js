@@ -2,9 +2,11 @@ import './bootstrap';
 import '../css/app.css';
 import 'flowbite';
 
-import { createIcons } from 'lucide';
+// Import semua ikon dari lucide
+import { createIcons, icons } from 'lucide';
 
-createIcons();
+// Buat ikon dengan menyertakan objek ikon
+createIcons({ icons });
 
 import Swal from 'sweetalert2';
 
