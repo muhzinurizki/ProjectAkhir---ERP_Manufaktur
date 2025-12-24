@@ -6,6 +6,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PurchaseRequestController;
+use App\Http\Controllers\PurchaseOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -72,6 +73,22 @@ Route::middleware(['auth'])->group(function () {
             'purchase-requests/{purchaseRequest}/reject',
             [PurchaseRequestController::class, 'reject']
         )->name('purchase-requests.reject');
+    });
+
+    Route::middleware(['auth'])->group(function () {
+
+        Route::resource('purchase-orders', PurchaseOrderController::class)
+            ->only(['index', 'create', 'store', 'show']);
+
+        Route::post(
+            'purchase-orders/{purchaseOrder}/submit',
+            [PurchaseOrderController::class, 'submit']
+        )->name('purchase-orders.submit');
+
+        Route::post(
+            'purchase-orders/{purchaseOrder}/approve',
+            [PurchaseOrderController::class, 'approve']
+        )->name('purchase-orders.approve');
     });
 });
 

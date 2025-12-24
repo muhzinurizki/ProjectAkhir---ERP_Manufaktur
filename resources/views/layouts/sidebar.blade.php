@@ -43,6 +43,7 @@
         ['header' => 'Procurement', 'role' => 'all'],
         ['route' => 'purchase-requests.index', 'icon' => 'shopping-cart', 'label' => 'Purchase Request', 'role' =>
         'all'],
+        ['route' => 'purchase-orders.index', 'icon' => 'shopping-bag', 'label' => 'Purchase Order', 'role' => 'all'],
 
         ['header' => 'Administration', 'role' => 'Admin'],
         ['route' => 'users.index', 'icon' => 'users', 'label' => 'User Management', 'role' => 'Admin'],
