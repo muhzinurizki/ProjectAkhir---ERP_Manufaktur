@@ -1,158 +1,157 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | ERP Tekstil</title>
+    {{-- Menggunakan font Plus Jakarta Sans agar konsisten dengan dashboard --}}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-gray-50 flex items-center justify-center">
+<body class="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4">
 
-<div class="w-full max-w-5xl bg-white shadow-xl rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+    <div
+        class="w-full max-w-[1100px] min-h-[640px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-[2.5rem] overflow-hidden grid grid-cols-1 lg:grid-cols-2">
 
-    {{-- LEFT: Branding --}}
-    <div class="hidden lg:flex flex-col justify-center px-12 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
-        <h1 class="text-3xl font-bold tracking-tight">
-            ERP Tekstil
-        </h1>
-        <p class="mt-4 text-blue-100 leading-relaxed">
-            Sistem manajemen terintegrasi untuk produksi, inventory, purchasing, sales, dan finance.
-        </p>
+        {{-- LEFT: Branding (Premium Slate Design) --}}
+        <div class="hidden lg:flex flex-col justify-between p-16 bg-slate-900 text-white relative overflow-hidden">
+            {{-- Decorative Elements --}}
+            <div class="absolute top-[-10%] left-[-10%] w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px]"></div>
 
-        <div class="mt-10 space-y-3">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-blue-300 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-sm">Akurasi stok real-time</span>
-            </div>
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-blue-300 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-sm">Workflow approval terkontrol</span>
-            </div>
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-blue-300 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="text-sm">Produksi & keuangan terintegrasi</span>
-            </div>
-        </div>
-    </div>
-
-    {{-- RIGHT: Login Form --}}
-    <div class="flex items-center justify-center px-8 py-12">
-
-        <div class="w-full max-w-sm">
-
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-12">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 font-bold text-xl">
+                        E
+                    </div>
+                    <span class="text-xl font-bold tracking-tight">ERP Tekstil</span>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900">
-                    Welcome Back
-                </h2>
-                <p class="mt-2 text-sm text-gray-500">
-                    Sign in to your account
+
+                <h1 class="text-4xl font-extrabold leading-[1.2] tracking-tight">
+                    Kelola Produksi <br>
+                    <span class="text-slate-400">Lebih Terstruktur.</span>
+                </h1>
+                <p class="mt-6 text-slate-400 text-lg font-medium leading-relaxed max-w-sm">
+                    Satu platform untuk mengontrol seluruh rantai produksi tekstil dari hulu ke hilir.
                 </p>
             </div>
 
-            {{-- Session Status --}}
-            @if (session('status'))
-                <div class="mt-4 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+            <div class="relative z-10 space-y-6">
+                <div class="flex items-center gap-4 group">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-emerald-500 transition-colors duration-500">
+                        <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-slate-300">Enterprise Grade Security</span>
+                </div>
+                <div class="flex items-center gap-4 group">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-indigo-500 transition-colors duration-500">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-sm font-semibold text-slate-300">Real-time Analytics Dashboard</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- RIGHT: Login Form --}}
+        <div class="flex items-center justify-center p-8 md:p-16">
+            <div class="w-full max-w-[360px]">
+                <div class="mb-10">
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Login</h2>
+                    <p class="mt-2 text-sm text-slate-500 font-medium">Silakan masuk ke akun Anda untuk melanjutkan.</p>
+                </div>
+
+                {{-- Session Status --}}
+                @if (session('status'))
+                <div
+                    class="mb-6 text-sm text-emerald-600 bg-emerald-50 p-4 rounded-2xl border border-emerald-100 font-semibold">
                     {{ session('status') }}
                 </div>
-            @endif
+                @endif
 
-            {{-- Login Form --}}
-            <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-6">
-                @csrf
+                <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                    @csrf
 
-                {{-- Email / Username --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Email or Username
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
-                            </svg>
+                    <div>
+                        <label class="block text-[13px] font-bold text-slate-700 mb-2 ml-1 uppercase tracking-wider">
+                            Email Address
+                        </label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i data-lucide="mail"
+                                    class="h-5 w-5 text-slate-400 group-focus-within:text-slate-900 transition-colors"></i>
+                            </div>
+                            <input type="email" name="email" required autofocus
+                                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all duration-200 text-sm font-medium outline-none"
+                                placeholder="nama@perusahaan.com" />
                         </div>
-                        <input
-                            type="text"
-                            name="email"
-                            required
-                            autofocus
-                            class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
-                            placeholder="admin@erp.test"
-                        />
+                        @error('email')
+                        <p class="text-xs text-rose-500 mt-2 ml-1 font-medium">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('email')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                {{-- Password --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Password
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                            </svg>
+                    <div>
+                        <div class="flex justify-between items-center mb-2 ml-1">
+                            <label class="text-[13px] font-bold text-slate-700 uppercase tracking-wider">
+                                Password
+                            </label>
+                            @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}"
+                                class="text-[12px] text-slate-400 hover:text-slate-900 font-bold transition-colors">
+                                Lupa Password?
+                            </a>
+                            @endif
                         </div>
-                        <input
-                            type="password"
-                            name="password"
-                            required
-                            class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
-                            placeholder="••••••••"
-                        />
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i data-lucide="lock"
+                                    class="h-5 w-5 text-slate-400 group-focus-within:text-slate-900 transition-colors"></i>
+                            </div>
+                            <input type="password" name="password" required
+                                class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-slate-900/5 focus:border-slate-900 transition-all duration-200 text-sm font-medium outline-none"
+                                placeholder="••••••••" />
+                        </div>
                     </div>
-                    @error('password')
-                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                    @enderror
+
+                    <div class="flex items-center ml-1">
+                        <input type="checkbox" name="remember" id="remember"
+                            class="h-4 w-4 text-slate-900 focus:ring-slate-900 border-slate-200 rounded-md">
+                        <label for="remember"
+                            class="ml-2 text-sm text-slate-500 font-medium cursor-pointer select-none">Ingat perangkat
+                            ini</label>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-slate-900 text-white py-4 rounded-2xl hover:bg-slate-800 active:scale-[0.98] transition-all duration-200 text-sm font-bold shadow-xl shadow-slate-200 flex items-center justify-center gap-2">
+                        Masuk ke Sistem
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <div class="mt-12 pt-8 border-t border-slate-50 text-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-[0.2em]">
+                        &copy; {{ date('Y') }} ERP Tekstil v2.0
+                    </p>
                 </div>
-
-                {{-- Remember & Forgot --}}
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center">
-                        <input type="checkbox" name="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                            Forgot password?
-                        </a>
-                    @endif
-                </div>
-
-                {{-- Submit --}}
-                <button
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-200 text-sm font-semibold shadow-md"
-                >
-                    Sign in
-                </button>
-            </form>
-
-            <p class="mt-8 text-xs text-center text-gray-500">
-                © {{ date('Y') }} ERP Tekstil. All rights reserved.
-            </p>
-
+            </div>
         </div>
     </div>
 
-</div>
-
+    {{-- Icons --}}
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
+
 </html>

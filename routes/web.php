@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,6 +18,10 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
+
+    Route::middleware(['auth'])->group(function () {
+    Route::resource('products', ProductController::class);
+});
 
 });
 
