@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,7 +11,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', fn () => view('dashboard.index'))
+    Route::get('/dashboard', fn() => view('dashboard.index'))
         ->name('dashboard');
 
     Route::prefix('profile')->name('profile.')->group(function () {
@@ -20,9 +21,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['auth'])->group(function () {
-    Route::resource('products', ProductController::class);
-});
+        Route::resource('products', ProductController::class);
+    });
+
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('suppliers', SupplierController::class);
+    });
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
