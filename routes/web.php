@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +29,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('suppliers', SupplierController::class);
     });
 
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('warehouses', WarehouseController::class);
+    });
 });
 
 require __DIR__ . '/auth.php';

@@ -28,6 +28,7 @@
         ['route' => 'dashboard', 'icon' => 'layout-dashboard', 'label' => 'Dashboard', 'role' => 'all'],
         ['header' => 'Master Data', 'role' => 'Admin'],
         ['route' => 'products.index', 'icon' => 'package', 'label' => 'Products', 'role' => 'Admin'],
+        ['route' => 'warehouses.index', 'icon' => 'warehouse', 'label' => 'Warehouses', 'role' => 'Admin'],
         ['route' => 'suppliers.index', 'icon' => 'truck', 'label' => 'Suppliers', 'role' => 'Admin'],
         ['header' => 'Administration', 'role' => 'Admin'],
         ['route' => 'users.index', 'icon' => 'users', 'label' => 'User Management', 'role' => 'Admin'],
