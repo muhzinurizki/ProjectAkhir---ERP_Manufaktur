@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
             ProductCategorySeeder::class,
             UnitSeeder::class,
             ProductSeeder::class,
-            SupplierSeeder::class, // Tambahkan ini
+            SupplierSeeder::class,
+            WarehouseSeeder::class,
+            StockMovementSeeder::class,
         ]);
     }
 }

@@ -26,10 +26,19 @@
         @php
         $menus = [
         ['route' => 'dashboard', 'icon' => 'layout-dashboard', 'label' => 'Dashboard', 'role' => 'all'],
+
+        // MASTER DATA
         ['header' => 'Master Data', 'role' => 'Admin'],
         ['route' => 'products.index', 'icon' => 'package', 'label' => 'Products', 'role' => 'Admin'],
         ['route' => 'warehouses.index', 'icon' => 'warehouse', 'label' => 'Warehouses', 'role' => 'Admin'],
         ['route' => 'suppliers.index', 'icon' => 'truck', 'label' => 'Suppliers', 'role' => 'Admin'],
+
+        // OPERASIONAL
+        ['header' => 'Inventory & Stock', 'role' => 'Admin'],
+        ['route' => 'inventory.index', 'icon' => 'clipboard-list', 'label' => 'Stock Overview', 'role' => 'Admin'],
+        ['route' => 'inventory.stock-in', 'icon' => 'list-plus', 'label' => 'Stock In (Masuk)', 'role' => 'Admin'],
+        ['route' => 'inventory.stock-out', 'icon' => 'list-minus', 'label' => 'Stock Out (Keluar)', 'role' => 'Admin'],
+
         ['header' => 'Administration', 'role' => 'Admin'],
         ['route' => 'users.index', 'icon' => 'users', 'label' => 'User Management', 'role' => 'Admin'],
         ['route' => 'roles.index', 'icon' => 'shield', 'label' => 'Role Management', 'role' => 'Admin'],
