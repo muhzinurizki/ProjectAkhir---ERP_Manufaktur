@@ -39,6 +39,11 @@
         ['route' => 'inventory.stock-in', 'icon' => 'list-plus', 'label' => 'Stock In (Masuk)', 'role' => 'Admin'],
         ['route' => 'inventory.stock-out', 'icon' => 'list-minus', 'label' => 'Stock Out (Keluar)', 'role' => 'Admin'],
 
+        // PURCHASE
+        ['header' => 'Procurement', 'role' => 'all'],
+        ['route' => 'purchase-requests.index', 'icon' => 'shopping-cart', 'label' => 'Purchase Request', 'role' =>
+        'all'],
+
         ['header' => 'Administration', 'role' => 'Admin'],
         ['route' => 'users.index', 'icon' => 'users', 'label' => 'User Management', 'role' => 'Admin'],
         ['route' => 'roles.index', 'icon' => 'shield', 'label' => 'Role Management', 'role' => 'Admin'],

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SupplierSeeder::class,
             WarehouseSeeder::class,
             StockMovementSeeder::class,
+            PurchaseRequestSeeder::class,
         ]);
     }
 }
