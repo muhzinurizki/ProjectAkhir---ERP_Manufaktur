@@ -7,6 +7,7 @@ use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\GoodsReceiptController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -90,6 +91,13 @@ Route::middleware(['auth'])->group(function () {
             [PurchaseOrderController::class, 'approve']
         )->name('purchase-orders.approve');
     });
+
+    Route::middleware(['auth'])->group(function () {
+
+    Route::resource('goods-receipts', GoodsReceiptController::class)
+        ->only(['index', 'create', 'store', 'show']);
+
+});
 });
 
 require __DIR__ . '/auth.php';

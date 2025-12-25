@@ -36,6 +36,7 @@
         // OPERASIONAL
         ['header' => 'Inventory & Stock', 'role' => 'Admin'],
         ['route' => 'inventory.index', 'icon' => 'clipboard-list', 'label' => 'Stock Overview', 'role' => 'Admin'],
+        ['route' => 'goods-receipts.index', 'icon' => 'package-check', 'label' => 'Goods Receipt', 'role' => 'all'],
         ['route' => 'inventory.stock-in', 'icon' => 'list-plus', 'label' => 'Stock In (Masuk)', 'role' => 'Admin'],
         ['route' => 'inventory.stock-out', 'icon' => 'list-minus', 'label' => 'Stock Out (Keluar)', 'role' => 'Admin'],
 

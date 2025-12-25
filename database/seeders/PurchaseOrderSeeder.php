@@ -12,10 +12,11 @@ class PurchaseOrderSeeder extends Seeder
 {
     public function run(): void
     {
-        $pr = PurchaseRequest::where('status','APPROVED')->with('items')->first();
+        $pr = PurchaseRequest::where('status', 'APPROVED')->with('items')->first();
         $supplier = Supplier::first();
 
-        if (!$pr || !$supplier) return;
+        if (!$pr || !$supplier)
+            return;
 
         $po = PurchaseOrder::create([
             'po_number' => 'PO-DEMO-001',
