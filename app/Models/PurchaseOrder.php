@@ -84,4 +84,9 @@ class PurchaseOrder extends Model
     {
         return $this->status === 'DRAFT';
     }
+
+    public function isClosed(): bool
+    {
+        return $this->status === 'CLOSED';
+    }
 }

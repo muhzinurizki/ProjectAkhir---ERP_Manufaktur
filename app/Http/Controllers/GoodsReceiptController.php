@@ -5,137 +5,126 @@ namespace App\Http\Controllers;
 use App\Models\GoodsReceipt;
 use App\Models\GoodsReceiptItem;
 use App\Models\PurchaseOrder;
-use App\Models\InventoryMovement;
+use App\Models\PurchaseOrderItem;
+use App\Models\StockMutation;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class GoodsReceiptController extends Controller
 {
-    /* =======================
-     |  LIST GOODS RECEIPT
-     ======================= */
-    public function index()
-    {
-        $receipts = GoodsReceipt::with(['purchaseOrder', 'warehouse'])
-            ->latest()
-            ->paginate(15);
+  /**
+   * Tampilkan Daftar Penerimaan Barang
+   */
+  public function index()
+  {
+    // Eager Loading relasi agar tidak error di Blade
+    $receipts = GoodsReceipt::with(['purchaseOrder', 'warehouse', 'receiver'])
+      ->latest()
+      ->paginate(15);
 
-        return view('goods-receipts.index', compact('receipts'));
-    }
+    return view('goods-receipts.index', compact('receipts'));
+  }
 
-    /* =======================
-     |  CREATE FORM
-     ======================= */
-    public function create()
-    {
-        $purchaseOrders = PurchaseOrder::with(['items.product', 'warehouse'])
-            ->where('status', 'APPROVED')
-            ->whereHas('items', function ($q) {
-                $q->whereColumn('received_quantity', '<', 'quantity');
-            })
-            ->get();
+  /**
+   * Form Input Penerimaan
+   */
+  public function create()
+  {
+    $purchaseOrders = PurchaseOrder::with(['items.product', 'warehouse', 'supplier'])
+      ->where('status', 'APPROVED')
+      ->whereHas('items', function ($q) {
+        $q->whereColumn('received_quantity', '<', 'quantity');
+      })
+      ->get();
 
-        return view('goods-receipts.create', compact('purchaseOrders'));
-    }
+    return view('goods-receipts.create', compact('purchaseOrders'));
+  }
 
-    /* =======================
-     |  STORE (RECEIVING + STOCK IN)
-     ======================= */
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'purchase_order_id' => 'required|exists:purchase_orders,id',
-            'gr_date' => 'required|date',
-            'note' => 'nullable|string',
+  /**
+   * Proses Simpan Penerimaan & Update Stok
+   */
+  public function store(Request $request)
+  {
+    $data = $request->validate([
+      'purchase_order_id' => 'required|exists:purchase_orders,id',
+      'gr_date' => 'required|date',
+      'items' => 'required|array|min:1',
+      'items.*.purchase_order_item_id' => 'required|exists:purchase_order_items,id',
+      'items.*.quantity' => 'required|numeric|min:0.0001',
+    ]);
 
-            'items' => 'required|array|min:1',
-            'items.*.purchase_order_item_id' => 'required|exists:purchase_order_items,id',
-            'items.*.quantity' => 'required|numeric|min:0.0001',
+    try {
+      return DB::transaction(function () use ($data) {
+        $po = PurchaseOrder::findOrFail($data['purchase_order_id']);
+
+        // Buat GR (gr_number otomatis dibuat oleh Model)
+        $gr = GoodsReceipt::create([
+          'gr_date' => $data['gr_date'],
+          'purchase_order_id' => $po->id,
+          'warehouse_id' => $po->warehouse_id,
+          'received_by' => auth()->id(),
+          'note' => $data['note'] ?? null,
         ]);
 
-        DB::transaction(function () use ($data) {
+        foreach ($data['items'] as $row) {
+          $poItem = PurchaseOrderItem::findOrFail($row['purchase_order_item_id']);
 
-            $po = PurchaseOrder::with('items')->lockForUpdate()->findOrFail($data['purchase_order_id']);
+          // Simpan Item
+          $gr->items()->create([
+            'purchase_order_item_id' => $poItem->id,
+            'product_id' => $poItem->product_id,
+            'quantity' => $row['quantity'],
+          ]);
 
-            // Guard: PO harus APPROVED
-            if ($po->status !== 'APPROVED') {
-                throw new \Exception('PO tidak valid untuk Goods Receipt');
-            }
+          // Update PO progress
+          $poItem->increment('received_quantity', $row['quantity']);
 
-            $gr = GoodsReceipt::create([
-                'gr_number' => $this->generateGrNumber(),
-                'gr_date' => $data['gr_date'],
-                'purchase_order_id' => $po->id,
-                'warehouse_id' => $po->warehouse_id,
-                'received_by' => Auth::id(),
-                'note' => $data['note'] ?? null,
-            ]);
+          // Hitung stok sebelum transaksi berdasarkan mutasi sebelumnya
+          $previousMutation = StockMutation::where('item_type', 'product')
+            ->where('item_id', $poItem->product_id)
+            ->where('warehouse_id', $gr->warehouse_id)
+            ->latest('created_at')
+            ->first();
 
-            foreach ($data['items'] as $row) {
+          $balanceBeforeValue = $previousMutation ? $previousMutation->balance_after : 0;
 
-                $poItem = $po->items->firstWhere('id', $row['purchase_order_item_id']);
-                if (!$poItem) {
-                    throw new \Exception('Item PO tidak ditemukan');
-                }
+          // Hitung stok setelah transaksi
+          $balanceAfterValue = $balanceBeforeValue + $row['quantity'];
 
-                $remaining = $poItem->quantity - $poItem->received_quantity;
+          // Catat Mutasi
+          $gr->stockMutations()->create([
+            'item_type' => 'product',
+            'item_id' => $poItem->product_id,
+            'warehouse_id' => $gr->warehouse_id,
+            'mutation_type' => 'IN',
+            'qty' => $row['quantity'],
+            'balance_before' => $balanceBeforeValue,
+            'balance_after' => $balanceAfterValue,
+            'reference_type' => \App\Models\GoodsReceipt::class,
+            'reference_id' => $gr->id,
+            'created_by' => auth()->id(),
+          ]);
+        }
 
-                if ($row['quantity'] > $remaining) {
-                    throw new \Exception('Qty diterima melebihi sisa PO');
-                }
+        // Update status PO jika sudah komplit
+        $gr->updateParentPoStatus();
 
-                // Simpan GR Item
-                GoodsReceiptItem::create([
-                    'goods_receipt_id' => $gr->id,
-                    'purchase_order_item_id' => $poItem->id,
-                    'product_id' => $poItem->product_id,
-                    'quantity' => $row['quantity'],
-                ]);
-
-                // Update received qty di PO
-                $poItem->increment('received_quantity', $row['quantity']);
-
-                // STOCK IN
-                InventoryMovement::create([
-                    'product_id' => $poItem->product_id,
-                    'warehouse_id' => $po->warehouse_id,
-                    'type' => 'IN',
-                    'quantity' => $row['quantity'],
-                    'reference_type' => 'GOODS_RECEIPT',
-                    'reference_id' => $gr->id,
-                ]);
-            }
-
-            // Auto close PO jika semua item sudah diterima
-            $allReceived = $po->items()->whereColumn('received_quantity', '<', 'quantity')->doesntExist();
-            if ($allReceived) {
-                $po->update(['status' => 'CLOSED']);
-            }
-        });
-
-        return redirect()
-            ->route('goods-receipts.index')
-            ->with('success', 'Goods Receipt berhasil disimpan dan stok bertambah');
+        return redirect()->route('goods-receipts.index')->with('success', 'Data tersimpan.');
+      });
+    } catch (\Exception $e) {
+      return back()->with('error', $e->getMessage());
     }
+  }
 
-    /* =======================
-     |  SHOW DETAIL
-     ======================= */
-    public function show(GoodsReceipt $goodsReceipt)
-    {
-        $goodsReceipt->load(['items.product', 'purchaseOrder', 'warehouse', 'receiver']);
-        return view('goods-receipts.show', compact('goodsReceipt'));
-    }
+  /**
+   * Tampilkan Detail Dokumen
+   */
+  public function show(GoodsReceipt $goodsReceipt)
+  {
+    $goodsReceipt->load(['items.product', 'purchaseOrder', 'warehouse', 'receiver']);
+    return view('goods-receipts.show', compact('goodsReceipt'));
+  }
 
-    /* =======================
-     |  HELPER: GR NUMBER
-     ======================= */
-    private function generateGrNumber(): string
-    {
-        $date = now()->format('Ymd');
-        $count = GoodsReceipt::whereDate('created_at', today())->count() + 1;
-
-        return 'GR-' . $date . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
-    }
 }
